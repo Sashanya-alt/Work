@@ -3,13 +3,14 @@
 
 #include "pch.h"
 #include "MFCApplication5.h"
+#include "MyDialog.h"
 #include "MyDialog2.h"
 #include "afxdialogex.h"
-#include "Struct.h"
-
-
+//#include "Struct.h"
+#include "AData.h"
 
 // Диалоговое окно MyDialog2
+
 
 IMPLEMENT_DYNAMIC(MyDialog2, CDialogEx)
 
@@ -37,6 +38,8 @@ BEGIN_MESSAGE_MAP(MyDialog2, CDialogEx)
     ON_NOTIFY(LVN_KEYDOWN, IDC_LIST2, &MyDialog2::OnKeydownList2)
     ON_NOTIFY(NM_RCLICK, IDC_LIST2, &MyDialog2::OnRclickList2)
     ON_NOTIFY(HDN_ITEMDBLCLICK, 0, &MyDialog2::OnItemdblclickList2)
+    ON_BN_CLICKED(IDC_test, &MyDialog2::OnClickedTest)
+    ON_BN_CLICKED(IDOK, &MyDialog2::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -73,6 +76,17 @@ BOOL MyDialog2::OnInitDialog()
     MyListCtrl.InsertItem(0, _T("Column 1"));
     MyListCtrl.InsertItem(1, _T("Column 2"));
     MyListCtrl.InsertItem(2, _T("Column 3"));
+    MyListCtrl.SetCheck(0, 1);
+    MyListCtrl.SetCheck(1, 1);
+    MyListCtrl.SetCheck(2, 1);
+
+    //bool check = MyListCtrl.GetCheck(0);
+
+ /*   struct Data data;
+    for (int i = 0; i <= 2; i++)
+    {
+        data.subsequence[i] = i;
+    }*/
     return TRUE;  // return TRUE unless you set the focus to a control
                   // Исключение: страница свойств OCX должна возвращать значение FALSE
 }
@@ -82,10 +96,74 @@ void MyDialog2::OnClickedUP()
 {
     // TODO: добавьте свой код обработчика уведомлений
  
-    //*pResult = 0;
-    LVITEM item;
-   // auto hListView = GetDlgItem(IDC_LIST2);
     int Hotindex = MyListCtrl.GetHotItem();
+
+    POSITION p = MyListCtrl.GetFirstSelectedItemPosition();
+    while (p)
+    {
+        int nSelected = MyListCtrl.GetNextSelectedItem(p);
+        Hotindex = nSelected;
+
+        // Do something with item nSelected
+    }
+    TCHAR szBuffer[1024];
+    TCHAR szBuffer2[1024];
+    DWORD cchBuf(1024);
+    CString strItem;// .Format(_T("Item %i"), i);
+    LVITEM lvi;
+    lvi.iItem = Hotindex;
+    lvi.iSubItem = 0;
+    lvi.mask = LVIF_TEXT;
+    lvi.pszText = szBuffer;
+    lvi.cchTextMax = cchBuf;
+    
+    MyListCtrl.GetItem(&lvi);
+    // sprintf(szBuffer2, "%s %d ", szBuffer, Hotindex); 
+    MyListCtrl.DeleteItem(Hotindex);
+    strItem.Format(_T("%s  "), szBuffer);
+    lvi.iItem--;
+    // lvi.pszText =
+    lvi.pszText = (LPTSTR)(LPCTSTR)(strItem);
+    MyListCtrl.InsertItem(&lvi);
+
+    char numberColA = szBuffer[7];
+    int numberCol = atoi(&numberColA);
+
+
+    //for (int i = 0; i <= 2; i++)
+    //{
+    //    data.subsequence[i] = i;
+    //}
+    //AData.Name = "column";
+    //AData.Visible = TRUE;
+    //AData.sub[0] = 1;
+    //AData.sub[1] = 2;
+    //AData.sub[2] = 3;
+
+
+    int k = AData2.sub[Hotindex];
+    AData2.sub[Hotindex] = AData2.sub[Hotindex - 1];
+    AData2.sub[Hotindex - 1] = k;
+
+    string str = AData2.Name[Hotindex];
+    AData2.Name[Hotindex] = AData2.Name[Hotindex - 1];
+    AData2.Name[Hotindex - 1] = str;
+
+
+  /*  for (int i = 0; i < 3; i++)
+    {
+        if (MyListCtrl.GetCheck(i) == 1)
+        {
+            AData2.Visible[i] == true;
+        }
+        else
+            AData2.Visible[i] == false;
+    }*/
+
+    //*pResult = 0;
+   // LVITEM item;
+   //// auto hListView = GetDlgItem(IDC_LIST2);
+   // int Hotindex = MyListCtrl.GetHotItem();
     //int checked = MyListCtrl.GetCheck(Hotindex);
 
     //// MyListCtrl.SetItemPosition(Hotindex);
@@ -181,7 +259,7 @@ void MyDialog2::OnKeydownList2(NMHDR* pNMHDR, LRESULT* pResult)
 
     
     CString sTextFromList= MyListCtrl.GetItemText(Hotindex, 0);//сюда поместим текст.
-    item1.pszText = sTextFromList;
+    //item1.pszText = sTextFromList;
 
     //int iIndex;   //хранит номер вделенной строки
     //iIndex = MyListCtrl.GetCurSel();     // получение номера выделенной строки.
@@ -213,4 +291,80 @@ void MyDialog2::OnItemdblclickList2(NMHDR* pNMHDR, LRESULT* pResult)
     LPNMHEADER phdr = reinterpret_cast<LPNMHEADER>(pNMHDR);
     // TODO: добавьте свой код обработчика уведомлений
     *pResult = 0;
+}
+
+
+void MyDialog2::OnClickedTest()
+{
+    // TODO: добавьте свой код обработчика уведомлений
+   // int Hotindex = MyListCtrl.GetHotItem();
+
+    TCHAR szBuffer[1024];
+    TCHAR szBuffer2[1024];
+    DWORD cchBuf(1024);
+    CString strItem;// .Format(_T("Item %i"), i);
+    LVITEM lvi;
+    lvi.iItem = 0;
+    lvi.iSubItem = 0;
+    lvi.mask = LVIF_TEXT;
+    lvi.pszText = szBuffer;
+    lvi.cchTextMax = cchBuf;
+    MyListCtrl.GetItem(&lvi);
+    // sprintf(szBuffer2, "%s %d ", szBuffer, Hotindex);
+    strItem.Format(_T("%s %d "), szBuffer, 0);
+
+    char numberColA = szBuffer[7];
+    int numberCol = atoi(&numberColA);
+    //lvi.iItem--;
+    //// lvi.pszText =
+    //lvi.pszText = (LPTSTR)(LPCTSTR)(strItem);
+    //MyListCtrl.InsertItem(&lvi);
+
+}
+
+
+void MyDialog2::OnBnClickedOk()
+{
+    //    // TODO: добавьте свой код обработчика уведомлений
+    //    CDialogEx::OnOK();
+    //    auto listctrl = GetDlgItem(IDC_LIST4);
+    //
+    //    ListView_DeleteColumn(listctrl->m_hWnd, 0);
+    //    ListView_DeleteColumn(listctrl->m_hWnd, 1);
+    //    ListView_DeleteColumn(listctrl->m_hWnd, 2);
+    //
+    //
+    bool check;
+    for (int i = 0; i < 3; i++)
+    {
+        check = MyListCtrl.GetCheck(i);
+        if (check == true)
+        {
+            AData2.Visible[i] = true;
+        }
+        else if (check == false)
+        {
+            AData2.Visible[i] = false;
+        }
+
+    }
+    //// Выясняем текущее состояние chechbox'а.
+    //LRESULT res = SendMessage(IDC_CHECK1, BM_GETCHECK, 0);
+    //// Если галочка стоит.
+    //for (int i = 0; i < 3; i++)
+    //{
+
+    //    if (res == BST_CHECKED)
+    //    {
+    //        //data.Visible = TRUE;
+    //        AData2.Visible[i] == true;
+    //    }
+    //    // Если галочка не стоит.
+    //    if (res == BST_UNCHECKED)
+    //    {
+    //        AData2.Visible[i] == false;
+    //    }
+    //    //data.Visible = FALSE;
+    //}
+
 }

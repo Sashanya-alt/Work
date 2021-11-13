@@ -6,6 +6,8 @@
 #include "framework.h"
 #include "MFCApplication5.h"
 #include "MFCApplication5Dlg.h"
+//#include "Struct.h"
+#include "AData.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,7 +27,7 @@ CMFCApplication5App::CMFCApplication5App()
 {
 	// поддержка диспетчера перезагрузки
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-
+	InitAData2();
 	// TODO: добавьте код создания,
 	// Размещает весь важный код инициализации в InitInstance
 }

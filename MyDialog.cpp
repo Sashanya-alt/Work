@@ -5,10 +5,10 @@
 #include "pch.h"
 #include "MFCApplication5.h"
 #include "MyDialog.h"
-#include "MyDialog2.h"
 #include "afxdialogex.h"
-#include "Struct.h"
-
+//#include "Struct.h"
+#include "AData.h"
+#include "MyDialog2.h"
 
 // Диалоговое окно MyDialog
 
@@ -75,8 +75,12 @@ BOOL MyDialog::OnInitDialog()
 	col.cx = 100;
 	ret = ListView_InsertColumn(listctrl->m_hWnd, 1, &col);
 
-	struct Data data;
-	data.Visible = TRUE;
+	col.mask = LVCF_TEXT | LVCF_WIDTH;
+	col.pszText = _T("Column 3");
+	col.cx = 100;
+	ret = ListView_InsertColumn(listctrl->m_hWnd, 2, &col);
+
+	//myData.Visible = TRUE;
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // Исключение: страница свойств OCX должна возвращать значение FALSE
 }
@@ -147,10 +151,57 @@ void MyDialog::OnContextMenu(CWnd* pWnd/*pWnd*/, CPoint point)
 						auto listctrl = GetDlgItem(IDC_LIST4);
 						LV_COLUMN col;
 						
+
+						//надо чтобы сюда заходилось после нажатия на ок в диалоге 2
+						//ListView_DeleteColumn(listctrl->m_hWnd, 0);
+						//ListView_DeleteColumn(listctrl->m_hWnd, 0);
+						//ListView_DeleteColumn(listctrl->m_hWnd, 0);//удаление column 2
+						//ListView_DeleteColumn(listctrl->m_hWnd, 2);
 						//auto ret = ListView_SetColumnWidth(listctrl->m_hWnd, 0, 0);
-						//ret = ListView_SetColumnWidth(listctrl->m_hWnd, 1, 0);
+						ListView_SetColumnWidth(listctrl->m_hWnd, 0, 0);
+						ListView_SetColumnWidth(listctrl->m_hWnd, 1, 0);
+						ListView_SetColumnWidth(listctrl->m_hWnd, 2, 0);
+						TCHAR szBuffer[1024];
+						TCHAR szBuffer2[1024];
+						DWORD cchBuf(1024);
+						CString strCol;
 						
+						//int t = MyData.sub[1];
+
 						
+						col.mask = LVCF_TEXT | LVCF_WIDTH;
+						col.pszText = szBuffer;
+						col.cchTextMax = cchBuf;
+						//strCol.Format (_T("Column %d"),  data.subsequence[1]);
+
+						for (int i = 0; i < 3; i++)
+						{
+							if (AData2.Visible[i] == 1)
+							{
+								col.cx = 100;
+							}
+							else if (AData2.Visible[i] == 0)
+							{
+								col.cx = 0;
+							}
+							strCol.Format(_T("Column  %d"), AData2.sub[i]);
+							col.pszText = (LPTSTR)(LPCTSTR)(strCol);
+							auto ret = ListView_InsertColumn(listctrl->m_hWnd, i, &col);
+							
+						}
+
+
+
+						//auto ret = ListView_InsertColumn(listctrl->m_hWnd, 0, &col);
+
+					/*	for (int i = 0; i < 3; i++)
+						{
+							strCol.Format(_T("Column  %d"), data.subsequence[i] );
+							auto ret = ListView_InsertColumn(listctrl->m_hWnd, i, &col);
+						}*/
+
+	
+						//auto ret = ListView_InsertColumn(listctrl->m_hWnd, 1, &col);
 						//// Выясняем текущее состояние chechbox'а.
 						//LRESULT res = SendMessage(IDC_CHECK1, BM_GETCHECK, 0);
 

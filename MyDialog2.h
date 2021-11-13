@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-
 // Диалоговое окно MyDialog2
 
 class MyDialog2 : public CDialogEx
@@ -29,4 +28,6 @@ public:
 	afx_msg void OnRclickList2(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnItemdblclickList2(NMHDR* pNMHDR, LRESULT* pResult);
 	CListCtrl MyListCtrl;
+	afx_msg void OnClickedTest();
+	afx_msg void OnBnClickedOk();
 };
